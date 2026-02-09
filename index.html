@@ -17,6 +17,7 @@ overflow: hidden;
 background: linear-gradient(135deg, #ff4d6d, #ffafcc, #ffc8dd, #bde0fe);
 background-size: 300% 300%;
 animation: bgMove 6s infinite alternate;
+position: relative;
 }
 
 @keyframes bgMove {
@@ -27,51 +28,50 @@ animation: bgMove 6s infinite alternate;
 .container {
 text-align: center;
 background: rgba(255, 255, 255, 0.25);
-padding: 40px;
+padding: 30px;
 border-radius: 25px;
 box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 backdrop-filter: blur(10px);
-max-width: 600px;
+width: 85%;
+max-width: 400px;
 position: relative;
+z-index: 2;
 }
 
 h1 {
-font-size: 2.5rem;
+font-size: 2rem;
 color: #fff;
 text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
 }
 
 p {
 color: white;
-font-size: 1.2rem;
-margin-bottom: 30px;
-}
-
-.btn-group {
-display: flex;
-justify-content: center;
-gap: 20px;
+font-size: 1.1rem;
+margin-bottom: 25px;
 }
 
 button {
 font-size: 1.2rem;
 border: none;
-padding: 15px 30px;
+padding: 14px 28px;
 border-radius: 15px;
 cursor: pointer;
-transition: 0.2s ease-in-out;
 font-weight: bold;
+transition: 0.2s ease-in-out;
+user-select: none;
+touch-action: manipulation;
 }
 
 #yesBtn {
 background: #06d6a0;
 color: white;
+width: 80%;
+margin-top: 10px;
 box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
-#yesBtn:hover {
-transform: scale(1.1);
-background: #00b37d;
+#yesBtn:active {
+transform: scale(0.95);
 }
 
 #noBtn {
@@ -79,50 +79,21 @@ background: #ff006e;
 color: white;
 position: absolute;
 left: 50%;
-top: 65%;
+top: 75%;
 transform: translate(-50%, -50%);
 box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+z-index: 3;
+width: 70%;
 }
 
-#noBtn:hover {
-transform: translate(-50%, -50%) scale(1.05);
-}
-
-.hearts {
-position: absolute;
-width: 100%;
-height: 100%;
-overflow: hidden;
-top: 0;
-left: 0;
-z-index: -1;
-}
-
-.heart {
-position: absolute;
-color: rgba(255,255,255,0.7);
-font-size: 20px;
-animation: floatUp 6s linear infinite;
-}
-
-@keyframes floatUp {
-0% {
-transform: translateY(100vh) scale(0.5);
-opacity: 0;
-}
-50% {
-opacity: 1;
-}
-100% {
-transform: translateY(-10vh) scale(1.2);
-opacity: 0;
-}
+#noBtn:active {
+transform: translate(-50%, -50%) scale(0.95);
 }
 
 .popup {
 display: none;
-margin-top: 25px;
-font-size: 1.5rem;
+margin-top: 20px;
+font-size: 1.4rem;
 color: white;
 font-weight: bold;
 text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
@@ -133,6 +104,35 @@ animation: pop 0.5s ease;
 from { transform: scale(0.5); opacity: 0; }
 to { transform: scale(1); opacity: 1; }
 }
+
+.hearts {
+position: absolute;
+width: 100%;
+height: 100%;
+overflow: hidden;
+top: 0;
+left: 0;
+z-index: 1;
+}
+
+.heart {
+position: absolute;
+color: rgba(255,255,255,0.75);
+font-size: 20px;
+animation: floatUp 6s linear infinite;
+}
+
+@keyframes floatUp {
+0% {
+transform: translateY(100vh) scale(0.5);
+opacity: 0;
+}
+50% { opacity: 1; }
+100% {
+transform: translateY(-10vh) scale(1.2);
+opacity: 0;
+}
+}
 </style>
 </head>
 
@@ -142,19 +142,17 @@ to { transform: scale(1); opacity: 1; }
 
 <div class="container">
 <h1>Will You Be My Valentine? ❤️</h1>
-<p>Think carefully... because "No" is not really an option 😌💘</p>
+<p>Be honest... but not too honest 😌💘</p>
 
-<div class="btn-group">
 <button id="yesBtn">Yes 💕</button>
-</div>
-
-<button id="noBtn">No 💔</button>
 
 <div class="popup" id="popupMsg">
 Yayyyy!! 😍❤️💍<br>
-I knew you’d say YES 🥹💖
+You just made my day 🥹💖
 </div>
 </div>
+
+<button id="noBtn">No 💔</button>
 
 <script>
 const noBtn = document.getElementById("noBtn");
@@ -163,40 +161,52 @@ const popupMsg = document.getElementById("popupMsg");
 
 const messages = [
 "Are you sure? 😏",
-"Do you really wanna do this? 🥺",
+"Don't do this 🥺",
 "Come on babe ❤️",
 "But I love you 😭",
-"You're gonna make me cry 😢",
+"You're breaking my heart 💔",
 "Plssss 😩💘",
-"Don't break my heart 💔",
-"Say yes already 😍",
-"I’ll buy you chocolates 🍫",
+"I’ll cry 😢",
+"Say yes 😍",
+"Chocolates for you 🍫",
 "Last chance 😤❤️"
 ];
 
 let msgIndex = 0;
 
 function moveButton() {
-const padding = 80;
+const btnWidth = noBtn.offsetWidth;
+const btnHeight = noBtn.offsetHeight;
 
-const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+const maxX = window.innerWidth - btnWidth - 20;
+const maxY = window.innerHeight - btnHeight - 20;
 
-const randomX = Math.floor(Math.random() * maxX) + padding / 2;
-const randomY = Math.floor(Math.random() * maxY) + padding / 2;
+const randomX = Math.floor(Math.random() * maxX) + 10;
+const randomY = Math.floor(Math.random() * maxY) + 10;
 
 noBtn.style.left = randomX + "px";
 noBtn.style.top = randomY + "px";
 }
 
-noBtn.addEventListener("mouseover", () => {
+// Escape when finger comes near (mobile friendly)
+document.addEventListener("touchstart", (e) => {
+const touch = e.touches[0];
+const btnRect = noBtn.getBoundingClientRect();
+
+const distanceX = Math.abs(touch.clientX - (btnRect.left + btnRect.width / 2));
+const distanceY = Math.abs(touch.clientY - (btnRect.top + btnRect.height / 2));
+
+if (distanceX < 120 && distanceY < 120) {
 noBtn.innerText = messages[msgIndex];
 msgIndex = (msgIndex + 1) % messages.length;
-
 moveButton();
+}
 });
 
+// Also escape if clicked accidentally
 noBtn.addEventListener("click", () => {
+noBtn.innerText = messages[msgIndex];
+msgIndex = (msgIndex + 1) % messages.length;
 moveButton();
 });
 
@@ -221,12 +231,13 @@ heart.style.animationDuration = Math.random() * 3 + 4 + "s";
 
 heartsContainer.appendChild(heart);
 
-setTimeout(() => {
-heart.remove();
-}, 6000);
+setTimeout(() => heart.remove(), 6000);
 }
 
-setInterval(createHeart, 300);
+setInterval(createHeart, 250);
+
+// Initial random position
+moveButton();
 </script>
 
 </body>
